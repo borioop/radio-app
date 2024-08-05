@@ -1,0 +1,144 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+#radio-app {
+    text-align: center;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #0098da; /* Niebieski kolor przewodni */
+}
+
+input[type="text"], button {
+    margin: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+input[type="text"] {
+    border-color: #0098da; /* Niebieski kolor */
+}
+
+button {
+    background-color: #a8cf45; /* Zielony kolor */
+    color: white;
+    border: none;
+}
+
+button:hover {
+    background-color: #0098da; /* Niebieski kolor przy hoverze */
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+img {
+    max-width: 300px;
+    max-height: 200px;
+    margin-top: 10px;
+}
+
+#app-logo {
+    width: 100px;
+    margin-top: 20px;
+}
+
+.search-container {
+    margin-top: 10px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.control-icon {
+    font-size: 24px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    color: #0098da; /* Niebieski kolor ikon */
+}
+
+.control-icon:hover {
+    transform: scale(1.2);
+}
+
+.control-label {
+    color: #0098da; /* Niebieski kolor tekstów */
+}
+
+#volume-container {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+#volume-control {
+    width: 100px;
+    margin-left: 10px;
+}
+
+#station-list {
+    margin-top: 20px;
+    text-align: left;
+}
+
+#stations {
+    list-style-type: none;
+    padding: 0;
+}
+
+#stations li {
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+#stations li:hover {
+    background-color: #e0f7fa; /* Jasny niebieski dla podświetlenia */
+}
+
+#stations li .play-icon {
+    margin-left: 10px;
+    display: none;
+}
+
+#stations li:hover .play-icon {
+    display: inline;
+}
+
+.favorite-icon {
+    font-size: 18px;
+    color: #f00; /* Czerwony kolor serca */
+    margin-left: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.favorite-icon:hover {
+    transform: scale(1.2);
+}
+
+.favorite-icon.favorited {
+    color: #f00; /* Czerwony kolor dla ulubionych */
+}
