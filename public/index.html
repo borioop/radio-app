@@ -11,19 +11,15 @@
     <div id="radio-app" class="container">
         <h1>Free Radio 24/7 Music</h1>
         <img id="app-logo" src="https://scontent.fpoz4-1.fna.fbcdn.net/v/t39.30808-6/453787294_122104778288447417_6274092217767562880_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=b8278c&_nc_ohc=hi3vZyP0YrcQ7kNvgE5tC3E&_nc_ht=scontent.fpoz4-1.fna&cb_e2o_trans=q&oh=00_AYCcGM3FAZrNAxTAddSg3eOjDI-JmNyTCLE0f4aLC7ciVg&oe=66B51F25" alt="Logo aplikacji" onclick="goToHomePage()">
-        
         <div class="search-container">
             <input type="text" id="station-name" placeholder="Wprowadź nazwę stacji">
             <button id="search-name" class="btn">Szukaj według nazwy</button>
+            <select id="country-select">
+                <option value="">Wybierz kraj</option>
+                <!-- Opcje krajów zostaną dodane dynamicznie przez JavaScript -->
+            </select>
+            <button id="search-country" class="btn">Szukaj według kraju</button>
         </div>
-
-        <div class="filter-container">
-            <input type="text" id="country-filter" placeholder="Filtruj według kraju">
-            <input type="text" id="language-filter" placeholder="Filtruj według języka">
-            <input type="text" id="tag-filter" placeholder="Filtruj według tagu">
-            <button id="filter-button" class="btn">Filtruj</button>
-        </div>
-        
         <div id="radio-info">
             <h2 id="station-name-display">Nazwa Stacji</h2>
             <audio id="radio-player" style="display: none;">
@@ -40,12 +36,10 @@
                 </div>
             </div>
         </div>
-        
         <div id="station-list">
             <h2>Najpopularniejsze stacje radiowe</h2>
             <ul id="stations"></ul>
         </div>
-        
         <div id="favorite-stations">
             <h2>Ulubione stacje</h2>
             <ul id="favorites"></ul>
