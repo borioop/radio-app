@@ -17,7 +17,7 @@ body {
 }
 
 h1 {
-    color: #0098da; /* Niebieski kolor przewodni */
+    color: #0098da;
 }
 
 input[type="text"], button {
@@ -30,17 +30,17 @@ input[type="text"], button {
 }
 
 input[type="text"] {
-    border-color: #0098da; /* Niebieski kolor */
+    border-color: #0098da;
 }
 
 button {
-    background-color: #a8cf45; /* Zielony kolor */
+    background-color: #a8cf45;
     color: white;
     border: none;
 }
 
 button:hover {
-    background-color: #0098da; /* Niebieski kolor przy hoverze */
+    background-color: #0098da;
 }
 
 button:active {
@@ -48,19 +48,32 @@ button:active {
 }
 
 img {
-    max-width: 400px; /* Zwiększono szerokość logo */
-    max-height: 250px; /* Zwiększono wysokość logo */
+    max-width: 400px;
+    max-height: 250px;
     margin-top: 10px;
-    cursor: pointer; /* Dodano kursor wskazujący na kliknięcie */
+    cursor: pointer;
 }
 
 #app-logo {
-    width: 150px; /* Zwiększono szerokość logo */
+    width: 150px;
     margin-top: 20px;
 }
 
 .search-container {
     margin-top: 10px;
+}
+
+.filter-container {
+    margin-top: 20px;
+}
+
+.filter-container select {
+    margin: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .controls {
@@ -75,7 +88,7 @@ img {
     margin: 0 10px;
     cursor: pointer;
     transition: transform 0.2s;
-    color: #0098da; /* Niebieski kolor ikon */
+    color: #0098da;
 }
 
 .control-icon:hover {
@@ -83,7 +96,7 @@ img {
 }
 
 .control-label {
-    color: #0098da; /* Niebieski kolor tekstów */
+    color: #0098da;
 }
 
 #volume-container {
@@ -116,7 +129,7 @@ img {
 }
 
 #stations li:hover, #favorites li:hover {
-    background-color: #e0f7fa; /* Jasny niebieski dla podświetlenia */
+    background-color: #e0f7fa;
 }
 
 #stations li .play-icon, #favorites li .play-icon {
