@@ -13,9 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Błąd:', error);
             alert('Nie udało się pobrać najczęściej słuchanych stacji.');
         });
-
-    // Załaduj opcje filtrowania
-    loadFilterOptions();
 });
 
 // Obsługa przycisku 'Szukaj według nazwy'
@@ -29,117 +26,84 @@ document.getElementById('search-name').addEventListener('click', function() {
             })
             .catch(error => {
                 console.error('Błąd:', error);
-                alert('Nie udało się znaleźć stacji o podanej nazwie.');
+                alert('Nie znaleziono stacji.');
             });
+    } else {
+        alert('Proszę wprowadzić nazwę stacji.');
     }
 });
 
-// Obsługa filtrowania według kraju, języka, tagów i popularności
-document.getElementById('filter-country').addEventListener('change', filterStations);
-document.getElementById('filter-language').addEventListener('change', filterStations);
-document.getElementById('filter-tag').addEventListener('change', filterStations);
-document.getElementById('filter-popularity').addEventListener('change', filterStations);
+// Obsługa filtrowania
+document.getElementById('filter-button').addEventListener('click', function() {
+    const country = document.getElementById('country-filter').value;
+    const language = document.getElementById('language-filter').value;
+    const tag = document.getElementById('tag-filter').value;
+    let url = '/api/radio/filter?';
 
-function filterStations() {
-    const country = document.getElementById('filter-country').value;
-    const language = document.getElementById('filter-language').value;
-    const tag = document.getElementById('filter-tag').value;
-    const popularity = document.getElementById('filter-popularity').value;
+    if (country) url += `country=${country}&`;
+    if (language) url += `language=${language}&`;
+    if (tag) url += `tag=${tag}&`;
 
-    let query = '/api/radio/filter?';
-    if (country) query += `country=${country}&`;
-    if (language) query += `language=${language}&`;
-    if (tag) query += `tag=${tag}&`;
-    if (popularity) query += `order=${popularity}&`;
-
-    fetch(query)
+    fetch(url)
         .then(response => response.json())
         .then(data => {
             displayStationList(data);
         })
         .catch(error => {
             console.error('Błąd:', error);
-            alert('Nie udało się zastosować filtru.');
+            alert('Nie udało się pobrać filtrów.');
         });
-}
+});
 
+// Wyświetlanie listy stacji
 function displayStationList(stations) {
-    const stationsList = document.getElementById('stations');
-    stationsList.innerHTML = '';
+    const stationList = document.getElementById('stations');
+    stationList.innerHTML = '';
 
     stations.forEach(station => {
-        const li = document.createElement('li');
-        li.textContent = station.name;
-        li.dataset.stationUrl = station.url;
-        li.dataset.stationName = station.name;
-        li.addEventListener('click', () => playStation(station.url, station.name));
+        const listItem = document.createElement('li');
+        listItem.textContent = station.name;
+        listItem.dataset.url = station.url;
 
         const playIcon = document.createElement('i');
-        playIcon.classList.add('fas', 'fa-play', 'play-icon');
-        li.appendChild(playIcon);
+        playIcon.className = 'fas fa-play play-icon';
+        playIcon.addEventListener('click', () => playStation(station.url, station.name));
+        listItem.appendChild(playIcon);
 
         const favoriteIcon = document.createElement('i');
-        favoriteIcon.classList.add('fas', 'fa-heart', 'favorite-icon');
-        if (favoriteStations.includes(station.url)) {
-            favoriteIcon.classList.add('favorited');
-        }
-        favoriteIcon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleFavoriteStation(station.url, station.name);
-            favoriteIcon.classList.toggle('favorited');
-        });
-        li.appendChild(favoriteIcon);
+        favoriteIcon.className = 'fas fa-heart favorite-icon';
+        favoriteIcon.classList.toggle('favorited', favoriteStations.includes(station.url));
+        favoriteIcon.addEventListener('click', () => toggleFavorite(station.url, favoriteIcon));
+        listItem.appendChild(favoriteIcon);
 
-        stationsList.appendChild(li);
+        stationList.appendChild(listItem);
     });
 }
 
-function loadFilterOptions() {
-    fetch('/api/radio/filters')
-        .then(response => response.json())
-        .then(data => {
-            populateSelectOptions('filter-country', data.countries);
-            populateSelectOptions('filter-language', data.languages);
-            populateSelectOptions('filter-tag', data.tags);
-        })
-        .catch(error => {
-            console.error('Błąd:', error);
-        });
-}
-
-function populateSelectOptions(selectId, options) {
-    const select = document.getElementById(selectId);
-    options.forEach(option => {
-        const opt = document.createElement('option');
-        opt.value = option;
-        opt.textContent = option;
-        select.appendChild(opt);
-    });
-}
-
+// Odtwarzanie stacji radiowej
 function playStation(url, name) {
     const player = document.getElementById('radio-player');
     player.src = url;
     player.play();
-    currentStation = url;
     document.getElementById('station-name-display').textContent = name;
     document.getElementById('play-button').style.display = 'none';
-    document.getElementById('stop-button').style.display = 'inline';
     document.getElementById('play-label').style.display = 'none';
+    document.getElementById('stop-button').style.display = 'inline';
     document.getElementById('stop-label').style.display = 'inline';
 }
 
+// Przerywanie odtwarzania
 document.getElementById('stop-button').addEventListener('click', function() {
     const player = document.getElementById('radio-player');
     player.pause();
-    currentStation = null;
     document.getElementById('station-name-display').textContent = 'Nazwa Stacji';
     document.getElementById('play-button').style.display = 'inline';
-    document.getElementById('stop-button').style.display = 'none';
     document.getElementById('play-label').style.display = 'inline';
+    document.getElementById('stop-button').style.display = 'none';
     document.getElementById('stop-label').style.display = 'none';
 });
 
+// Obsługa głośności
 document.getElementById('volume-control').addEventListener('input', function() {
     const player = document.getElementById('radio-player');
     player.volume = this.value;
@@ -149,52 +113,44 @@ document.getElementById('mute-button').addEventListener('click', function() {
     const player = document.getElementById('radio-player');
     isMuted = !isMuted;
     player.muted = isMuted;
-    this.classList.toggle('fa-volume-up', !isMuted);
-    this.classList.toggle('fa-volume-mute', isMuted);
+    this.className = isMuted ? 'fas fa-volume-mute control-icon' : 'fas fa-volume-up control-icon';
 });
 
-function toggleFavoriteStation(url, name) {
-    if (favoriteStations.includes(url)) {
-        favoriteStations = favoriteStations.filter(station => station !== url);
-    } else {
+// Obsługa ulubionych stacji
+function toggleFavorite(url, icon) {
+    const index = favoriteStations.indexOf(url);
+    if (index === -1) {
         favoriteStations.push(url);
+        icon.classList.add('favorited');
+    } else {
+        favoriteStations.splice(index, 1);
+        icon.classList.remove('favorited');
     }
     localStorage.setItem('favoriteStations', JSON.stringify(favoriteStations));
-    displayFavoriteStations();
 }
 
-function displayFavoriteStations() {
+// Aktualizowanie listy ulubionych
+function updateFavoriteStations() {
     const favoritesList = document.getElementById('favorites');
     favoritesList.innerHTML = '';
-    favoriteStations.forEach(stationUrl => {
-        fetch(`/api/radio/url?url=${encodeURIComponent(stationUrl)}`)
-            .then(response => response.json())
-            .then(station => {
-                const li = document.createElement('li');
-                li.textContent = station.name;
-                li.dataset.stationUrl = station.url;
-                li.dataset.stationName = station.name;
-                li.addEventListener('click', () => playStation(station.url, station.name));
 
-                const playIcon = document.createElement('i');
-                playIcon.classList.add('fas', 'fa-play', 'play-icon');
-                li.appendChild(playIcon);
+    favoriteStations.forEach(url => {
+        fetch(`/api/radio/url?url=${url}`)
+            .then(response => response.json())
+            .then(data => {
+                const listItem = document.createElement('li');
+                listItem.textContent = data.name;
+                listItem.dataset.url = url;
+                listItem.addEventListener('click', () => playStation(url, data.name));
 
                 const favoriteIcon = document.createElement('i');
-                favoriteIcon.classList.add('fas', 'fa-heart', 'favorite-icon', 'favorited');
-                favoriteIcon.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleFavoriteStation(station.url, station.name);
-                    li.remove();
-                });
-                li.appendChild(favoriteIcon);
+                favoriteIcon.className = 'fas fa-heart favorite-icon favorited';
+                favoriteIcon.addEventListener('click', () => toggleFavorite(url, favoriteIcon));
+                listItem.appendChild(favoriteIcon);
 
-                favoritesList.appendChild(li);
-            })
-            .catch(error => {
-                console.error('Błąd:', error);
+                favoritesList.appendChild(listItem);
             });
     });
 }
 
-displayFavoriteStations();
+updateFavoriteStations();
