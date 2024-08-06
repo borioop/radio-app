@@ -8,43 +8,67 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div id="radio-app" class="container">
-        <h1>Free Radio 24/7 Music</h1>
-        <img id="app-logo" src="https://scontent.fpoz4-1.fna.fbcdn.net/v/t39.30808-6/453787294_122104778288447417_6274092217767562880_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=b8278c&_nc_ohc=hi3vZyP0YrcQ7kNvgE5tC3E&_nc_ht=scontent.fpoz4-1.fna&cb_e2o_trans=q&oh=00_AYCcGM3FAZrNAxTAddSg3eOjDI-JmNyTCLE0f4aLC7ciVg&oe=66B51F25" alt="Logo aplikacji" onclick="goToHomePage()">
-        <div class="search-container">
-            <input type="text" id="station-name" placeholder="Wprowadź nazwę stacji">
-            <button id="search-name" class="btn">Szukaj według nazwy</button>
-        </div>
-        <div id="radio-info">
-            <h2 id="station-name-display">Nazwa Stacji</h2>
-            <audio id="radio-player" style="display: none;">
-                Your browser does not support the audio element.
-            </audio>
-            <div class="controls">
-                <i id="play-button" class="fas fa-play control-icon" style="display: none;"></i>
-                <span id="play-label" class="control-label" style="display: none;">Play</span>
-                <i id="stop-button" class="fas fa-stop control-icon" style="display: none;"></i>
-                <span id="stop-label" class="control-label" style="display: none;">Stop</span>
-                <div id="volume-container" class="volume-container">
-                    <i id="mute-button" class="fas fa-volume-up control-icon"></i>
-                    <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5">
-                </div>
+<div id="radio-app" class="container">
+    <h1>Free Radio 24/7 Music</h1>
+    <img id="app-logo" src="https://scontent.fpoz4-1.fna.fbcdn.net/v/t39.30808-6/453787294_122104778288447417_6274092217767562880_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=b8278c&_nc_ohc=hi3vZyP0YrcQ7kNvgE5tC3E&_nc_ht=scontent.fpoz4-1.fna&cb_e2o_trans=q&oh=00_AYCcGM3FAZrNAxTAddSg3eOjDI-JmNyTCLE0f4aLC7ciVg&oe=66B51F25" alt="Logo aplikacji" onclick="goToHomePage()">
+
+    <div class="search-container">
+        <input type="text" id="station-name" placeholder="Wprowadź nazwę stacji">
+        <button id="search-name" class="btn">Szukaj według nazwy</button>
+    </div>
+
+    <div class="filter-container">
+        <select id="filter-country">
+            <option value="">Wybierz kraj</option>
+        </select>
+        <select id="filter-language">
+            <option value="">Wybierz język</option>
+        </select>
+        <select id="filter-tag">
+            <option value="">Wybierz tag</option>
+        </select>
+        <select id="filter-popularity">
+            <option value="">Wybierz popularność</option>
+            <option value="topvote">Najwięcej głosów</option>
+            <option value="clickcount">Najwięcej kliknięć</option>
+            <option value="lastclick">Ostatnio odtwarzane</option>
+            <option value="lastchange">Ostatnio zmieniane</option>
+        </select>
+    </div>
+
+    <div id="radio-info">
+        <h2 id="station-name-display">Nazwa Stacji</h2>
+        <audio id="radio-player" style="display: none;">
+            Your browser does not support the audio element.
+        </audio>
+        <div class="controls">
+            <i id="play-button" class="fas fa-play control-icon" style="display: none;"></i>
+            <span id="play-label" class="control-label" style="display: none;">Play</span>
+            <i id="stop-button" class="fas fa-stop control-icon" style="display: none;"></i>
+            <span id="stop-label" class="control-label" style="display: none;">Stop</span>
+            <div id="volume-container" class="volume-container">
+                <i id="mute-button" class="fas fa-volume-up control-icon"></i>
+                <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5">
             </div>
         </div>
-        <div id="station-list">
-            <h2>Najpopularniejsze stacje radiowe</h2>
-            <ul id="stations"></ul>
-        </div>
-        <div id="favorite-stations">
-            <h2>Ulubione stacje</h2>
-            <ul id="favorites"></ul>
-        </div>
     </div>
-    <script src="script.js"></script>
-    <script>
-        function goToHomePage() {
-            window.location.href = '/';
-        }
-    </script>
+
+    <div id="station-list">
+        <h2>Najpopularniejsze stacje radiowe</h2>
+        <ul id="stations"></ul>
+    </div>
+
+    <div id="favorite-stations">
+        <h2>Ulubione stacje</h2>
+        <ul id="favorites"></ul>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    function goToHomePage() {
+        window.location.href = '/';
+    }
+</script>
 </body>
 </html>
