@@ -1,8 +1,3 @@
-let currentStation = null;
-let isMuted = false;
-let favoriteStations = JSON.parse(localStorage.getItem('favoriteStations')) || [];
-
-// Automatycznie załaduj najczęściej słuchane stacje przy starcie
 document.addEventListener('DOMContentLoaded', function() {
     fetch('/api/radio/top')
         .then(response => response.json())
@@ -15,7 +10,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
     fetch('/api/radio/countries')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             populateCountrySelect(data);
         })
@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 
-// Obsługa przycisku 'Szukaj według nazwy'
 document.getElementById('search-name').addEventListener('click', function() {
     const name = document.getElementById('station-name').value;
     if (name) {
@@ -43,7 +42,6 @@ document.getElementById('search-name').addEventListener('click', function() {
     }
 });
 
-// Obsługa przycisku 'Szukaj według kraju'
 document.getElementById('search-country').addEventListener('click', function() {
     const country = document.getElementById('country-select').value;
     if (country) {
@@ -63,6 +61,7 @@ document.getElementById('search-country').addEventListener('click', function() {
 
 function populateCountrySelect(countries) {
     const countrySelect = document.getElementById('country-select');
+    countrySelect.innerHTML = '<option value="">Wybierz kraj</option>';
     countries.forEach(country => {
         const option = document.createElement('option');
         option.value = country.name;
@@ -72,6 +71,11 @@ function populateCountrySelect(countries) {
 }
 
 function displayStationList(stations) {
+    if (!Array.isArray(stations)) {
+        console.error('Invalid data format:', stations);
+        alert('Błędny format danych.');
+        return;
+    }
     const stationList = document.getElementById('stations');
     stationList.innerHTML = '';
     stations.forEach(station => {
@@ -114,7 +118,6 @@ function showControls() {
     document.getElementById('volume-container').style.display = 'flex';
 }
 
-// Obsługa przycisków play/stop/mute
 document.getElementById('play-button').addEventListener('click', function() {
     const radioPlayer = document.getElementById('radio-player');
     if (currentStation) {
@@ -141,7 +144,6 @@ document.getElementById('volume-control').addEventListener('input', function() {
     radioPlayer.volume = this.value;
 });
 
-// Ulubione stacje
 function toggleFavorite(station, icon) {
     if (isFavorite(station)) {
         removeFavorite(station);
@@ -185,9 +187,4 @@ function displayFavoriteStations() {
             toggleFavorite(station, favoriteIcon);
         });
         li.appendChild(favoriteIcon);
-        favoriteList.appendChild(li);
-    });
-}
-
-// Wyświetl ulubione stacje przy starcie
-document.addEventListener('DOMContentLoaded', displayFavoriteStations);
+        favorite
