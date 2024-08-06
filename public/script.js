@@ -187,4 +187,8 @@ function displayFavoriteStations() {
             toggleFavorite(station, favoriteIcon);
         });
         li.appendChild(favoriteIcon);
-        favorite
+        favoriteList.appendChild(li);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', displayFavoriteStations);
