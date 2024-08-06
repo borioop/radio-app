@@ -1,87 +1,61 @@
 const express = require('express');
 const axios = require('axios');
-const path = require('path');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
+const apiURL = 'http://www.radio-browser.info/webservice/json/stations/';
 
-// Adres URL API RadioBrowser
-const RADIOBROWSER_API = 'https://de1.api.radio-browser.info/json';
+app.use(express.static('public'));
 
-// Ustawienie katalogu statycznego
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Endpoint API do wyszukiwania stacji według nazwy
-app.get('/api/radio/name', async (req, res) => {
-    const name = req.query.name;
-
-    if (!name) {
-        return res.status(400).json({ error: 'Missing name parameter' });
-    }
-
-    try {
-        const response = await axios.get(`${RADIOBROWSER_API}/stations/byname/${encodeURIComponent(name)}`);
-        const stations = response.data;
-
-        if (stations.length > 0) {
-            res.json(stations.slice(0, 10)); // Zwróć top 10 stacji
-        } else {
-            res.status(404).json({ error: 'Stacja nie znaleziona' });
-        }
-    } catch (error) {
-        console.error('Błąd podczas pobierania danych z API:', error);
-        res.status(500).json({ error: 'Błąd serwera' });
-    }
+app.get('/api/radio/top', (req, res) => {
+    axios.get(apiURL + 'topclick/10')
+        .then(response => res.json(response.data))
+        .catch(error => res.status(500).json({ error: error.toString() }));
 });
 
-// Endpoint API do pobierania najczęściej słuchanych stacji
-app.get('/api/radio/top', async (req, res) => {
-    try {
-        const response = await axios.get(`${RADIOBROWSER_API}/stations/topvote/10`);
-        const stations = response.data;
-        res.json(stations);
-    } catch (error) {
-        console.error('Błąd podczas pobierania danych z API:', error);
-        res.status(500).json({ error: 'Błąd serwera' });
-    }
+app.get('/api/radio/name', (req, res) => {
+    const { name } = req.query;
+    axios.get(`${apiURL}search?name=${name}`)
+        .then(response => res.json(response.data))
+        .catch(error => res.status(500).json({ error: error.toString() }));
 });
 
-// Endpoint API do pobierania szczegółowych informacji o stacji
-app.get('/api/radio/details', async (req, res) => {
-    const id = req.query.id;
+app.get('/api/radio/filter', (req, res) => {
+    const { country, language, tag, order } = req.query;
+    let query = 'search?';
 
-    if (!id) {
-        return res.status(400).json({ error: 'Missing id parameter' });
-    }
+    if (country) query += `country=${country}&`;
+    if (language) query += `language=${language}&`;
+    if (tag) query += `tag=${tag}&`;
+    if (order) query += `order=${order}&`;
 
-    try {
-        const response = await axios.get(`${RADIOBROWSER_API}/stations/byid/${id}`);
-        const station = response.data;
-        res.json(station);
-    } catch (error) {
-        console.error('Błąd podczas pobierania danych z API:', error);
-        res.status(500).json({ error: 'Błąd serwera' });
-    }
+    axios.get(apiURL + query)
+        .then(response => res.json(response.data))
+        .catch(error => res.status(500).json({ error: error.toString() }));
 });
 
-// Endpoint API do pobierania stacji według gatunku
-app.get('/api/radio/genre', async (req, res) => {
-    const genre = req.query.genre;
-
-    if (!genre) {
-        return res.status(400).json({ error: 'Missing genre parameter' });
-    }
-
-    try {
-        const response = await axios.get(`${RADIOBROWSER_API}/stations/bytag/${encodeURIComponent(genre)}`);
-        const stations = response.data;
-        res.json(stations);
-    } catch (error) {
-        console.error('Błąd podczas pobierania danych z API:', error);
-        res.status(500).json({ error: 'Błąd serwera' });
-    }
+app.get('/api/radio/filters', (req, res) => {
+    Promise.all([
+        axios.get(apiURL + 'countries'),
+        axios.get(apiURL + 'languages'),
+        axios.get(apiURL + 'tags')
+    ])
+    .then(([countriesRes, languagesRes, tagsRes]) => {
+        res.json({
+            countries: countriesRes.data.map(country => country.name),
+            languages: languagesRes.data.map(language => language.name),
+            tags: tagsRes.data.map(tag => tag.name)
+        });
+    })
+    .catch(error => res.status(500).json({ error: error.toString() }));
 });
 
-// Serwer nasłuchuje na porcie 3000
+app.get('/api/radio/url', (req, res) => {
+    const { url } = req.query;
+    axios.get(`${apiURL}search?url=${url}`)
+        .then(response => res.json(response.data[0]))
+        .catch(error => res.status(500).json({ error: error.toString() }));
+});
+
 app.listen(port, () => {
-    console.log(`Serwer uruchomiony na http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
