@@ -7,7 +7,13 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('/api/radio/top')
         .then(response => response.json())
         .then(data => {
-            displayStationList(data);
+            console.log('Odpowiedź API:', data); // Logowanie danych do sprawdzenia
+            if (Array.isArray(data)) {
+                displayStationList(data);
+            } else {
+                console.error('Oczekiwano tablicy stacji, otrzymano:', data);
+                alert('Nie udało się pobrać najczęściej słuchanych stacji.');
+            }
         })
         .catch(error => {
             console.error('Błąd:', error);
@@ -22,7 +28,13 @@ document.getElementById('search-name').addEventListener('click', function() {
         fetch(`/api/radio/name?name=${name}`)
             .then(response => response.json())
             .then(data => {
-                displayStationList(data);
+                console.log('Odpowiedź API:', data); // Logowanie danych do sprawdzenia
+                if (Array.isArray(data)) {
+                    displayStationList(data);
+                } else {
+                    console.error('Oczekiwano tablicy stacji, otrzymano:', data);
+                    alert('Nie znaleziono stacji.');
+                }
             })
             .catch(error => {
                 console.error('Błąd:', error);
@@ -47,7 +59,13 @@ document.getElementById('filter-button').addEventListener('click', function() {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            displayStationList(data);
+            console.log('Odpowiedź API:', data); // Logowanie danych do sprawdzenia
+            if (Array.isArray(data)) {
+                displayStationList(data);
+            } else {
+                console.error('Oczekiwano tablicy stacji, otrzymano:', data);
+                alert('Nie udało się pobrać filtrów.');
+            }
         })
         .catch(error => {
             console.error('Błąd:', error);
